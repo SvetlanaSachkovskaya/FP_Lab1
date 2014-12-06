@@ -12,8 +12,8 @@
 
 ;data parsing
 (defn parse-number [s]
-  (if (re-find #"^-?\d+\.?\d*$" s)
-    (read-string s)))
+	(if (re-find #"^-?\d+\.?\d*$" s)
+		(read-string s)))
  
 (defn parse-string-to-features [line]
 	(->> (clojure.string/split line #",") 
@@ -27,15 +27,15 @@
 		(fn [features line]
 			(let [features-vector (parse-string-to-features line )]
 				(if (not(nil? features-vector))
-					(conj features features-vector))))
-         [] (line-seq rdr))))
+					(conj features features-vector))))[] 
+		(line-seq rdr))))
 
 		 
 ;distance calculation		 
 (defn euclidian-distance [obj1 obj2]
 	(->> (map - obj1 obj2)
-		 (map #(* % %))
-		 (reduce +)))
+		(map #(* % %))
+		(reduce +)))
 
 (defn hamming-distance [obj1 obj2]
 	(count (filter false? (map = obj1 obj2))))
@@ -47,8 +47,7 @@
 	
 (defn calculate-potential [features-vector features-vectors distance-calculator]
 	(reduce + 
-		(map (fn [x] 
-			(potential features-vector x alpha distance-calculator)) 
+		(map (fn [x] (potential features-vector x alpha distance-calculator)) 
 		features-vectors)))
 
 (defn initialize-objects [features-vectors distance-calculator]
@@ -69,8 +68,8 @@
 	(sort-by :potential objects))
 			
 (defn calculate-min-distance [object objects distance-calculator]
-	(apply min (
-		map (fn [x] 
+	(apply min
+		(map (fn [x] 
 			(distance-calculator (:vect x) (:vect object))) 
 		objects)))
 
@@ -97,7 +96,7 @@
 (defn -main [& args]
 	(if (>= (count args) 2)
 		(let [distance (get-distance-calculator (last args))
-			  features-vectors (read-data-from-file (apply str (first args)))]
+			features-vectors (read-data-from-file (apply str (first args)))]
 			println (find-centers features-vectors distance))
 		(println "Few input data")))
 		
